@@ -1,0 +1,30 @@
+version: 2.1
+jobs:
+  build_test:
+    docker:
+      - image: circleci/node:18
+    steps:
+      - checkout
+      - run:
+          name: Install npm dependencies
+          command: |
+            npm install --save
+  build_docker_image:
+    docker:
+      - image: circleci/node:18
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build docker image
+          command: |
+            docker build -t arjit547/node_circleci .
+            echo $DOCKER_PASSWORD | docker login -u arjit547 --password-stdin
+            docker push arjit547/node_circleci
+
+workflows:
+  build_test:
+    jobs:
+      - build_test
+      - build_docker_image
