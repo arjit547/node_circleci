@@ -2,8 +2,9 @@ version: 2.1
 jobs:
   build_test:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:18.17.0-browsers
     steps:
+      - browser-tools/install-browser-tools
       - checkout
       - run:
           name: Install npm dependencies
@@ -11,7 +12,7 @@ jobs:
             npm install --save
   build_docker_image:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:18.17.0-browsers
     steps:
       - checkout
       - setup_remote_docker:
